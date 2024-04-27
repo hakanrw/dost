@@ -6,6 +6,7 @@
 
 class Graph {
     public:
+        Graph();
         void addPerson(int id, const Person &person);
         Person* getPerson(int id) const;
 
@@ -16,11 +17,14 @@ class Graph {
         std::vector<Person*> suggestFriendsByOccupation(const Person* person) const;
         std::vector<Person*> suggestFriendsByAge(const Person* person) const;
 
-        std::vector<std::pair<int, Person*>> getGraph() const;
+        std::vector<std::pair<int, Person>> getGraph() const;
         int getSize() const;
 
         void degreeCentrality() const;
         int clusteringCoefficient() const;
         int girvanNewman(int iterations) const;
         double edgeWeight(const Graph &graph, int u, int v) const;
+
+    private:
+        std::vector<std::pair<int, Person>> people;
 };

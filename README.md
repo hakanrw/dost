@@ -8,8 +8,8 @@ Ahmet Hakan Candar
 ## Project Structure
 This project consists of three subprojects
 	- `lib` the base library that handles graphs and people
-	- `tui` a terminal interface to interact with the project
-	- `gui` a graphical user interface to interact with the project
+	- `tui` a terminal interface to interact with the base library
+	- `gui` a graphical user interface to interact with the base library
 
 ## Building Steps
 For building all subprojects,
