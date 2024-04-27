@@ -1,7 +1,7 @@
 #include <Person.h>
 
 Person::Person(int id, std::string name, int age, std::string gender, std::string occupation, std::vector<int> friends)
-: id(id), name(name), gender(gender), age(age), occupation(occupation), friends(friends) {}
+: id(id), name(name), age(age), gender(gender), occupation(occupation), friends(friends) {}
 
 std::ostream& operator<<(std::ostream& os, const Person& person) {
     os << "Person (id=" << person.id << ", name=" << person.name 
