@@ -50,6 +50,20 @@ static GtkWidget* create_person_row(Person* person) {
 
     gtk_box_append(GTK_BOX(vbox), occupationBox);
 
+    GtkWidget *friendsBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
+    gtk_box_append(GTK_BOX(friendsBox), gtk_image_new_from_icon_name("system-users-symbolic"));
+
+    std::vector<int> friends = person->getFriends();
+
+    for (std::vector<int>::const_iterator it = friends.begin(); it != friends.end(); ++it) {
+        GtkWidget *avatar = adw_avatar_new(15, graph.getPerson(*it)->getName().c_str(), true);
+        if (it == friends.begin()) gtk_widget_set_margin_start(avatar, 5);
+        gtk_box_append(GTK_BOX(friendsBox), avatar);
+    }
+    //gtk_box_append(GTK_BOX(occupationBox), gtk_label_new(person->getOccupation().c_str()));
+
+    gtk_box_append(GTK_BOX(vbox), friendsBox);
+
     gtk_list_box_row_set_child(GTK_LIST_BOX_ROW(row), vbox);
     return row;
 }
