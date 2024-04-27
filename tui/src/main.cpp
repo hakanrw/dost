@@ -19,6 +19,15 @@ void suggestFriendsInterface() {
     int id;
     std::cin >> id;
 
+    Person* person = graph.getPerson(id);
+
+    if (person == nullptr) {
+        std::cerr << "Person with ID " << id << " not found" << std::endl;
+        return;
+    }
+
+    std::cout << "For person:\n" << *person << "\n\nWe suggest:" << std::endl;
+
     std::vector<Person*> suggestedPeople = graph.suggestFriends(id, mode);
 
     for (std::vector<Person*>::iterator it = suggestedPeople.begin(); it != suggestedPeople.end(); ++it) {

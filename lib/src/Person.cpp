@@ -1,7 +1,12 @@
 #include <Person.h>
+#include <algorithm>
 
 Person::Person(int id, std::string name, int age, std::string gender, std::string occupation, std::vector<int> friends)
 : id(id), name(name), age(age), gender(gender), occupation(occupation), friends(friends) {}
+
+void Person::removeFriend(int id) {
+    friends.erase(find(friends.begin(), friends.end(), id));
+}
 
 // BEGIN Setters and Getters
 

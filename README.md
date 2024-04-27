@@ -14,6 +14,7 @@ This project consists of three subprojects
 ## Building Steps
 For building all subprojects, do either
   - `./build.sh` (UNIX) or `build.bat` (NT)
+
 Or
   - `cmake -B build` Create Makefile
   - `cmake --build build` Build with Make
@@ -21,5 +22,6 @@ Or
 ## Running
 Do either
   - `./run.sh` (UNIX) or `run.bat` (NT)
+
 Or
   - `./build/tui/dost-tui` (UNIX) or `build\tui\dost-tui.exe` (NT)

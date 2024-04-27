@@ -24,6 +24,7 @@ class Person {
         void setOccupation(std::string occupation);
 
         std::vector<int> getFriends() const;
+        void removeFriend(int id);
 
         friend std::ostream& operator<<(std::ostream& os, const Person& person); // print
 

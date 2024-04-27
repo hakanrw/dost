@@ -25,6 +25,11 @@ Person* Graph::getPerson(int id) const {
     return (Person*) person;
 }
 
+void Graph::removeFriendship(int id1, int id2) {
+    getPerson(id1)->removeFriend(id2);
+    getPerson(id2)->removeFriend(id1);
+}
+
 void Graph::displayGraph() const {
     for (std::vector<std::pair<int, Person>>::const_iterator it = graph.begin(); it != graph.end(); ++it) {
         std::cout << it->first << ": " << it->second << std::endl;
