@@ -20,11 +20,12 @@ class Graph {
         std::vector<std::pair<int, Person>> getGraph() const;
         int getSize() const;
 
+        void displayGraph() const;
         void degreeCentrality() const;
         int clusteringCoefficient() const;
         int girvanNewman(int iterations) const;
         double edgeWeight(const Graph &graph, int u, int v) const;
 
     private:
-        std::vector<std::pair<int, Person>> people;
+        std::vector<std::pair<int, Person>> graph;
 };

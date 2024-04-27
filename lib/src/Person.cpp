@@ -5,7 +5,7 @@ Person::Person(int id, std::string name, int age, std::string gender, std::strin
 
 // BEGIN Setters and Getters
 
-int Person::getId() {
+int Person::getId() const {
     return id;
 }
 
@@ -13,7 +13,7 @@ void Person::setId(int id) {
     this->id = id;
 }
 
-std::string Person::getName() {
+std::string Person::getName() const {
     return name;
 }
 
@@ -21,7 +21,7 @@ void Person::setName(std::string name) {
     this->name = name;
 }
 
-int Person::getAge() {
+int Person::getAge() const {
     return age;
 }
 
@@ -29,7 +29,7 @@ void Person::setAge(int age) {
     this->age = age;
 }
 
-std::string Person::getGender() {
+std::string Person::getGender() const{
     return gender;
 }
 
@@ -37,12 +37,16 @@ void Person::setGender(std::string gender) {
     this->gender = gender;
 }
 
-std::string Person::getOccupation() {
+std::string Person::getOccupation() const {
     return occupation;
 }
 
 void Person::setOccupation(std::string occupation) {
     this->occupation = occupation;
+}
+
+std::vector<int> Person::getFriends() const {
+    return friends;
 }
 
 // END Setters and Getters
