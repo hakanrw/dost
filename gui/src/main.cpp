@@ -1,119 +1,107 @@
 #include <adwaita.h>
 #include <cstdlib>
+#include <iostream>
 #include <vector>
 
 #include <Person.h>
+#include <ui.h>
 #include <utils.h>
+#include <globals.h>
 
 Graph graph;
+GtkWidget *navigationView;
 
-static void add_header_bar(GtkWidget *box) {
+static AdwNavigationPage* create_person_detail_page(const Person* person) 
+{
+    GtkWidget *detailBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    ui::add_header_bar(detailBox);
 
-    GtkWidget *headerBar = adw_header_bar_new();
-    gtk_box_append(GTK_BOX(box), headerBar);
-}
+    GtkWidget *scrolledWindow = gtk_scrolled_window_new();
+    gtk_widget_set_vexpand(scrolledWindow, true);
 
-static GtkWidget* create_person_row(Person* person) {
-    GtkWidget *row = gtk_list_box_row_new();
-    // gtk_widget_set_size_request(row, 0, 50);
-    gtk_widget_add_css_class(row, "card");
+    GtkWidget *list = ui::create_tall_vbox();
 
+    gtk_box_append(GTK_BOX(list), ui::create_person_card(person));
 
-    GtkWidget *vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 15);
-    gtk_widget_set_margin_top(vbox, 12);
-    gtk_widget_set_margin_bottom(vbox, 12);
-    gtk_widget_set_margin_start(vbox, 8);
-    gtk_widget_set_margin_end(vbox, 8);
-
-    GtkWidget *hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 20);
-    GtkWidget *avatar = adw_avatar_new(40, person->getName().c_str(), true);
-    GtkWidget *label = gtk_label_new(person->getName().c_str());
-
-    gtk_box_append(GTK_BOX(hbox), avatar);
-    gtk_box_append(GTK_BOX(hbox), label);
-    gtk_box_append(GTK_BOX(vbox), hbox);
-
-    gtk_box_append(GTK_BOX(vbox), gtk_separator_new(GTK_ORIENTATION_HORIZONTAL));
-    
-    char str[24];
-    sprintf(str, "%d, %s", person->getAge(), person->getGender().c_str());
-
-    GtkWidget *genderBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
-    gtk_box_append(GTK_BOX(genderBox), gtk_image_new_from_icon_name("user-info-symbolic"));
-    gtk_box_append(GTK_BOX(genderBox), gtk_label_new(str));
-
-    gtk_box_append(GTK_BOX(vbox), genderBox);
-
-    GtkWidget *occupationBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
-    gtk_box_append(GTK_BOX(occupationBox), gtk_image_new_from_icon_name("preferences-system-symbolic"));
-    gtk_box_append(GTK_BOX(occupationBox), gtk_label_new(person->getOccupation().c_str()));
-
-    gtk_box_append(GTK_BOX(vbox), occupationBox);
-
-    GtkWidget *friendsBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
-    gtk_box_append(GTK_BOX(friendsBox), gtk_image_new_from_icon_name("system-users-symbolic"));
+    GtkWidget *label = gtk_label_new(NULL);
+    gtk_label_set_markup(GTK_LABEL(label), "<b>Friends</b>");
+    gtk_box_append(GTK_BOX(list), label);
 
     std::vector<int> friends = person->getFriends();
 
     for (std::vector<int>::const_iterator it = friends.begin(); it != friends.end(); ++it) {
-        GtkWidget *avatar = adw_avatar_new(15, graph.getPerson(*it)->getName().c_str(), true);
-        if (it == friends.begin()) gtk_widget_set_margin_start(avatar, 5);
-        gtk_box_append(GTK_BOX(friendsBox), avatar);
+        gtk_box_append(GTK_BOX(list), ui::create_person_card_small(graph.getPerson(*it)));
     }
-    //gtk_box_append(GTK_BOX(occupationBox), gtk_label_new(person->getOccupation().c_str()));
 
-    gtk_box_append(GTK_BOX(vbox), friendsBox);
+    GtkWidget *suggestionsLabel = gtk_label_new(NULL);
+    gtk_label_set_markup(GTK_LABEL(suggestionsLabel), "<b>Suggestions</b>");
+    gtk_box_append(GTK_BOX(list), suggestionsLabel);
 
-    gtk_list_box_row_set_child(GTK_LIST_BOX_ROW(row), vbox);
-    return row;
+    gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(scrolledWindow), list);
+    gtk_box_append(GTK_BOX(detailBox), scrolledWindow);
+
+    AdwNavigationPage *detailPage = adw_navigation_page_new(detailBox, person->getName().c_str());
+    return detailPage;
 }
 
-static void add_list(GtkWidget *box) {
+static void row_clicked(GtkButton* button, gpointer id) 
+{
+    adw_navigation_view_push(ADW_NAVIGATION_VIEW(navigationView), create_person_detail_page(graph.getPerson(GPOINTER_TO_INT(id))));
+}
+
+static void add_list(GtkWidget *box) 
+{
     GtkWidget *scrolledWindow = gtk_scrolled_window_new();
     gtk_widget_set_vexpand(scrolledWindow, true);
 
-    GtkWidget *list = gtk_box_new(GTK_ORIENTATION_VERTICAL, 15);
-    gtk_widget_set_margin_top(list, 20);
-    gtk_widget_set_margin_bottom(list, 20);
-    gtk_widget_set_hexpand(list, false);
-    gtk_widget_set_halign(list, GTK_ALIGN_CENTER);
-    gtk_widget_set_size_request(list, 400, 0);
+    GtkWidget *list = ui::create_tall_vbox();
     
     std::vector<std::pair<int, Person>> _graph = graph.getGraph();
     
     for (std::vector<std::pair<int, Person>>::const_iterator it = _graph.begin(); it != _graph.end(); ++it) {
-        gtk_box_append(GTK_BOX(list), create_person_row((Person*)&it->second));
+        GtkWidget* row = ui::create_person_card((Person*)&it->second);
+        g_signal_connect(row, "clicked", G_CALLBACK(row_clicked), GINT_TO_POINTER(it->second.getId()));
+        gtk_box_append(GTK_BOX(list), row);
     }
 
     gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(scrolledWindow), list);
     gtk_box_append(GTK_BOX(box), scrolledWindow);
 }
 
-static void
-activate_cb(GtkApplication *app)
+static void activate_cb(GtkApplication *app)
 {
     GtkWidget *window = adw_application_window_new(app);
 
     gtk_window_set_title(GTK_WINDOW(window), "Dost");
-    gtk_window_set_default_size(GTK_WINDOW(window), 700, 500);
+    gtk_window_set_default_size(GTK_WINDOW(window), 700, 900);
     gtk_window_present(GTK_WINDOW(window));
+
+    navigationView = adw_navigation_view_new();
 
     GtkWidget *box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 
-    add_header_bar(box);
+    ui::add_header_bar(box);
     add_list(box);
 
-    adw_application_window_set_content(ADW_APPLICATION_WINDOW(window), box);
+    AdwNavigationPage *homePage = adw_navigation_page_new_with_tag(box, "Dost", "home");
+    adw_navigation_view_add(ADW_NAVIGATION_VIEW(navigationView), homePage);
+    
+    GtkWidget *detailBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    ui::add_header_bar(detailBox);
+
+    AdwNavigationPage *detailPage = adw_navigation_page_new_with_tag(detailBox, "Details", "detail");
+    adw_navigation_view_add(ADW_NAVIGATION_VIEW(navigationView), detailPage);
+
+    adw_application_window_set_content(ADW_APPLICATION_WINDOW(window), navigationView);
 }
 
-int main(int argc,
-         char *argv[])
+int main(int argc, char *argv[])
 {
     graph = readData("social_network.csv");
 
     g_autoptr(AdwApplication) app = NULL;
 
-    app = adw_application_new("dev.candar.project.Dost", G_APPLICATION_FLAGS_NONE);
+    app = adw_application_new("dev.candar.project.Dost", G_APPLICATION_DEFAULT_FLAGS);
 
     g_signal_connect(app, "activate", G_CALLBACK(activate_cb), NULL);
 
