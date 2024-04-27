@@ -21,7 +21,7 @@ set(EXEC ${BIN_DIR}/${TARGET_NAME})
 include_directories(${INCLUDE_DIR})
 
 # Build executable
-add_executable(${TARGET_NAME} ${SRCS})
+add_library(${TARGET_NAME} ${SRCS})
 
 # Install target
 install(TARGETS ${TARGET_NAME}
