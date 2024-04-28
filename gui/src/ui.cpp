@@ -124,12 +124,6 @@ GtkWidget* ui::create_tall_vbox() {
     return list;
 }
 
-static void suggestion_clicked(GtkWidget* widget, GtkListBoxRow* row, gpointer data) {
-    int person_id = GPOINTER_TO_INT(data);
-    int suggestion_mode = gtk_list_box_row_get_index(GTK_LIST_BOX_ROW(row));
-    std::cout << person_id << " " << suggestion_mode << std::endl; 
-}
-
 GtkWidget* ui::create_suggestions_list_box(const Person* person) {
 
     GtkWidget *listBox = gtk_list_box_new();
@@ -144,20 +138,18 @@ GtkWidget* ui::create_suggestions_list_box(const Person* person) {
     gtk_list_box_append(GTK_LIST_BOX(listBox), suggestionRow);
 
     GtkWidget *suggestionRow1 = adw_action_row_new();
-    adw_preferences_row_set_title(ADW_PREFERENCES_ROW(suggestionRow1), "By Similar Age");
+    adw_preferences_row_set_title(ADW_PREFERENCES_ROW(suggestionRow1), "By Occupation");
     adw_action_row_add_suffix(ADW_ACTION_ROW(suggestionRow1), gtk_image_new_from_icon_name("go-next-symbolic"));
     gtk_list_box_row_set_activatable(GTK_LIST_BOX_ROW(suggestionRow1), true);
 
     gtk_list_box_append(GTK_LIST_BOX(listBox), suggestionRow1);
 
     GtkWidget *suggestionRow2 = adw_action_row_new();
-    adw_preferences_row_set_title(ADW_PREFERENCES_ROW(suggestionRow2), "By Occupation");
+    adw_preferences_row_set_title(ADW_PREFERENCES_ROW(suggestionRow2), "By Age");
     adw_action_row_add_suffix(ADW_ACTION_ROW(suggestionRow2), gtk_image_new_from_icon_name("go-next-symbolic"));
     gtk_list_box_row_set_activatable(GTK_LIST_BOX_ROW(suggestionRow2), true);
 
     gtk_list_box_append(GTK_LIST_BOX(listBox), suggestionRow2);
-
-    g_signal_connect(listBox, "row-selected", G_CALLBACK(suggestion_clicked), GINT_TO_POINTER(person->getId()));
 
     return listBox;
 }
