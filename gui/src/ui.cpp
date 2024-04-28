@@ -1,5 +1,7 @@
 #include <ui.h>
 
+#include <iostream>
+
 GtkWidget* ui::create_person_card(const Person* person) {
     GtkWidget *row = gtk_button_new();
     gtk_widget_add_css_class(row, "card");
@@ -120,6 +122,44 @@ GtkWidget* ui::create_tall_vbox() {
     gtk_widget_set_size_request(list, 400, 0);
 
     return list;
+}
+
+static void suggestion_clicked(GtkWidget* widget, GtkListBoxRow* row, gpointer data) {
+    int person_id = GPOINTER_TO_INT(data);
+    int suggestion_mode = gtk_list_box_row_get_index(GTK_LIST_BOX_ROW(row));
+    std::cout << person_id << " " << suggestion_mode << std::endl; 
+}
+
+GtkWidget* ui::create_suggestions_list_box(const Person* person) {
+
+    GtkWidget *listBox = gtk_list_box_new();
+    gtk_widget_add_css_class(listBox, "boxed-list");
+    gtk_list_box_set_selection_mode(GTK_LIST_BOX(listBox), GTK_SELECTION_NONE);
+
+    GtkWidget *suggestionRow = adw_action_row_new();
+    adw_preferences_row_set_title(ADW_PREFERENCES_ROW(suggestionRow), "By Common Friends");
+    adw_action_row_add_suffix(ADW_ACTION_ROW(suggestionRow), gtk_image_new_from_icon_name("go-next-symbolic"));
+    gtk_list_box_row_set_activatable(GTK_LIST_BOX_ROW(suggestionRow), true);
+
+    gtk_list_box_append(GTK_LIST_BOX(listBox), suggestionRow);
+
+    GtkWidget *suggestionRow1 = adw_action_row_new();
+    adw_preferences_row_set_title(ADW_PREFERENCES_ROW(suggestionRow1), "By Similar Age");
+    adw_action_row_add_suffix(ADW_ACTION_ROW(suggestionRow1), gtk_image_new_from_icon_name("go-next-symbolic"));
+    gtk_list_box_row_set_activatable(GTK_LIST_BOX_ROW(suggestionRow1), true);
+
+    gtk_list_box_append(GTK_LIST_BOX(listBox), suggestionRow1);
+
+    GtkWidget *suggestionRow2 = adw_action_row_new();
+    adw_preferences_row_set_title(ADW_PREFERENCES_ROW(suggestionRow2), "By Occupation");
+    adw_action_row_add_suffix(ADW_ACTION_ROW(suggestionRow2), gtk_image_new_from_icon_name("go-next-symbolic"));
+    gtk_list_box_row_set_activatable(GTK_LIST_BOX_ROW(suggestionRow2), true);
+
+    gtk_list_box_append(GTK_LIST_BOX(listBox), suggestionRow2);
+
+    g_signal_connect(listBox, "row-selected", G_CALLBACK(suggestion_clicked), GINT_TO_POINTER(person->getId()));
+
+    return listBox;
 }
 
 void ui::add_header_bar(GtkWidget *box) {

@@ -37,6 +37,10 @@ static AdwNavigationPage* create_person_detail_page(const Person* person)
     gtk_label_set_markup(GTK_LABEL(suggestionsLabel), "<b>Suggestions</b>");
     gtk_box_append(GTK_BOX(list), suggestionsLabel);
 
+    GtkWidget *listBox = ui::create_suggestions_list_box(person);
+
+    gtk_box_append(GTK_BOX(list), listBox);
+
     gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(scrolledWindow), list);
     gtk_box_append(GTK_BOX(detailBox), scrolledWindow);
 
