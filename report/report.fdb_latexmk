@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1714315444.0805 "/home/hakan/Desktop/cpp/dost/report/report.tex" "report.pdf" "report" 1714315444.64362 0
-  "/home/hakan/Desktop/cpp/dost/report/report.tex" 1714315443.88897 2395 7953a47a1d33d4cbba2fee04aef7249e ""
+["pdflatex"] 1714315639.62442 "/home/hakan/Desktop/cpp/dost/report/report.tex" "report.pdf" "report" 1714315640.1834 0
+  "/home/hakan/Desktop/cpp/dost/report/report.tex" 1714315639.43545 2399 98cc0bf6c94e573a8c633b898937c70b ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm" 1136768653 1536 e07581a4bb3136ece9eeb4c3ffab8233 ""
@@ -84,9 +84,9 @@
   "images//gui1.png" 1714315382.21971 50384 51b39ebb81d2ce64bc451cf12cbcef66 ""
   "images//gui2.png" 1714315363.51024 37823 105f9d6fe055336e82bcffb765965a2b ""
   "images//tui.png" 1714315195.95397 110307 1f4b32cb8c3a98f82394540a7083f907 ""
-  "report.aux" 1714315444.58095 1173 9633dd0f4b76df97035cc895097d1145 "pdflatex"
-  "report.out" 1714315444.58195 485 62258a438f83ad67efc26061df4d7964 "pdflatex"
-  "report.tex" 1714315443.88897 2395 7953a47a1d33d4cbba2fee04aef7249e ""
+  "report.aux" 1714315640.11943 1173 9633dd0f4b76df97035cc895097d1145 "pdflatex"
+  "report.out" 1714315640.11943 485 62258a438f83ad67efc26061df4d7964 "pdflatex"
+  "report.tex" 1714315639.43545 2399 98cc0bf6c94e573a8c633b898937c70b ""
   (generated)
   "report.aux"
   "report.log"
