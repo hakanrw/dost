@@ -9,7 +9,7 @@ namespace ui {
     GtkWidget* create_person_card(const Person* person);
     GtkWidget* create_person_card_small(const Person* person);
 
-    GtkWidget* create_suggestions_list_box(const Person* person);
+    GtkWidget* create_suggestions_list_box();
     
     GtkWidget* create_tall_vbox();
     

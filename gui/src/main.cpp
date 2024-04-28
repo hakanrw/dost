@@ -90,7 +90,7 @@ static AdwNavigationPage* create_person_detail_page(const Person* person)
     gtk_label_set_markup(GTK_LABEL(suggestionsLabel), "<b>Suggestions</b>");
     gtk_box_append(GTK_BOX(list), suggestionsLabel);
 
-    GtkWidget *listBox = ui::create_suggestions_list_box(person);
+    GtkWidget *listBox = ui::create_suggestions_list_box();
     g_signal_connect(listBox, "row-activated", G_CALLBACK(suggestion_clicked), GINT_TO_POINTER(person->getId()));
 
     gtk_box_append(GTK_BOX(list), listBox);

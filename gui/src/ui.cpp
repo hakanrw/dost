@@ -124,7 +124,7 @@ GtkWidget* ui::create_tall_vbox() {
     return list;
 }
 
-GtkWidget* ui::create_suggestions_list_box(const Person* person) {
+GtkWidget* ui::create_suggestions_list_box() {
 
     GtkWidget *listBox = gtk_list_box_new();
     gtk_widget_add_css_class(listBox, "boxed-list");
