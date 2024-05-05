@@ -24,9 +24,12 @@ class Graph {
         float degreeCentralityOfPerson(int id) const;
         void degreeCentrality() const;
         float clusteringCoefficient(int id) const;
-        int girvanNewman(int iterations) const;
-        double edgeWeight(const Graph &graph, int u, int v) const;
+        std::vector<std::vector<int>> girvanNewman(int iterations) const;
+        float edgeWeight(const Graph &graph, int u, int v) const;
+        float edgeBetweenness(int a, int b) const;
 
     private:
+        std::vector<std::vector<int>> bfs(int start, int end) const;
+
         std::vector<std::pair<int, Person>> graph;
 };

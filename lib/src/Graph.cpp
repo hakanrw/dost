@@ -6,6 +6,11 @@
 #include <cmath>
 #include <sstream>
 #include <set>
+#include <queue>
+#include <map>
+#include <limits>
+
+#define DEBUG 
 
 Graph::Graph() : graph() {}
 
@@ -69,6 +74,202 @@ float Graph::clusteringCoefficient(int id) const {
     int Kv = friends.size();
     int Nv = pairSet.size();
     return (2 * Nv) / (float) (Kv * (Kv - 1));
+}
+
+// Recursive function to find paths from `current` to `start` using the `parent` map
+static void findPaths(std::map<int, std::vector<int>> &parent, int start, int current, std::vector<int> &path, std::vector<std::vector<int>> &allPaths) {
+    // Add the current node to the path
+    path.push_back(current);
+
+    // If the current node is the start node, we have found a path
+    if (current == start) {
+        // Reverse the path (since we constructed it from end to start)
+        std::reverse(path.begin(), path.end());
+        // Add the path to the list of all paths
+        allPaths.push_back(path);
+        // Reverse the path back to its original order
+        std::reverse(path.begin(), path.end());
+    } else {
+        // Recurse through each parent of the current node
+        for (int parentNode : parent[current]) {
+            findPaths(parent, start, parentNode, path, allPaths);
+        }
+    }
+
+    // Remove the current node from the path to backtrack
+    path.pop_back();
+}
+
+// returns all shortest paths between two people
+std::vector<std::vector<int>> Graph::bfs(int start, int end) const {
+    if (start == end) return std::vector<std::vector<int>>();
+    
+    std::queue<int> queue;
+    std::map<int, int> visited;
+    std::map<int, std::vector<int>> parent;
+    queue.push(start);
+    visited[start] = 1;
+
+    while (queue.size() > 0) {
+        const int current = queue.front();
+        queue.pop();
+
+        if (current == end) break;
+        
+        for (const int node : getPerson(current)->getFriends()) {
+            if (visited[node] == 0) {
+                visited[node] = visited[current] + 1;
+                queue.push(node);
+                parent[node].push_back(current);
+            }
+            else if (visited[current] + 1 == visited[node]) {
+                parent[node].push_back(current);
+            }
+        }
+    }
+
+    std::vector<std::vector<int>> paths;
+    std::vector<int> p;
+    findPaths(parent, start, end, p, paths);
+
+    return paths;
+}
+
+template <typename T>
+void printVectorOfVectors(const std::vector<std::vector<T>> &vec) {
+    // Iterate through each inner vector
+    for (const std::vector<T> &innerVec : vec) {
+        // Iterate through each element in the inner vector
+        for (const T &element : innerVec) {
+            // Print each element followed by a space
+            std::cout << element << " ";
+        }
+        // Print a newline after printing each inner vector
+        std::cout << std::endl;
+    }
+}
+
+float Graph::edgeBetweenness(int a, int b) const {
+    int pathsPassEdge = 0;
+    int totalPaths = 0;
+
+    for (size_t i = 0; i < graph.size(); i++) {
+        for (size_t j = i + 1; j < graph.size(); j++) {
+            std::vector<std::vector<int>> paths = bfs(graph[i].first, graph[j].first);
+            totalPaths += paths.size();
+
+            // std::cout << "-------------------" << std::endl;
+            // printVectorOfVectors(paths);
+
+            for (size_t z = 0; z < paths.size(); z++) {
+                const std::vector<int> path = paths[z]; 
+                auto aLocation = find(path.begin(), path.end(), a);
+                auto bLocation = find(path.begin(), path.end(), b);
+
+                if (aLocation == path.end() || bLocation == path.end()) continue;
+
+                if (std::abs(aLocation - bLocation) == 1) pathsPassEdge++;
+            }
+        }
+    }
+
+    // std::cout << "paths pass edge: " << pathsPassEdge << std::endl;
+    // std::cout << "total paths: " << totalPaths << std::endl;
+
+    if (totalPaths == 0) return 0.0f;
+
+    return pathsPassEdge /* / (float) totalPaths */;
+}
+
+// i am not sure what the teacher wanted by edgeWeight
+float Graph::edgeWeight(const Graph& graph, int u, int v) const {
+    return graph.edgeBetweenness(u, v);
+}
+
+static void dfs(const Graph& graph, int node, std::set<int>& visited, std::vector<int>& component) {
+        // Mark the current node as visited
+        visited.insert(node);
+
+        // Add the node to the current component
+        component.push_back(node);
+
+        // Iterate over the neighbors of the current node
+        for (int neighbor : graph.getPerson(node)->getFriends()) {
+            // If the neighbor has not been visited, perform DFS on it
+            if (visited.find(neighbor) == visited.end()) {
+                dfs(graph, neighbor, visited, component);
+            }
+        }
+    }
+
+
+static std::vector<std::vector<int>> connectedComponentsInGraph(const Graph& graph) {
+    std::vector<std::vector<int>> connectedComponents;
+    std::set<int> visited;
+
+    for (const std::pair<int, Person>& nodePair : graph.getGraph()) {
+        int node = nodePair.first;
+
+        if (visited.find(node) == visited.end()) {
+            std::vector<int> component;
+
+            dfs(graph, node, visited, component);
+
+            connectedComponents.push_back(component);
+        }
+    }
+
+    return connectedComponents;
+}
+
+std::vector<std::vector<int>> Graph::girvanNewman(int iteration) const {
+    Graph graphCopy = *this;
+
+    for (size_t i = iteration; i > 0; i--) {
+        std::map<std::pair<int, int>, float> edgeValues;
+
+        for (size_t x = 0; x < graph.size(); x++) {
+            for (size_t y = x + 1; y < graph.size(); y++) {
+                edgeValues[{x, y}] = graphCopy.edgeBetweenness(x, y);
+            }
+        }
+
+#ifdef DEBUG
+        // Iterate through the map and print each key-value pair
+        for (const auto& entry : edgeValues) {
+            const std::pair<int, int>& key = entry.first;
+            float value = entry.second;
+            if (value == 0) continue;
+            std::cout << "Key: (" << key.first << ", " << key.second << "), Value: " << value << std::endl;
+        }
+#endif // DEBUG
+
+        std::pair<int, int> maxKey;
+        float maxValue = std::numeric_limits<float>::lowest(); // Start with the lowest possible value
+
+        // Iterate through the map to find the maximum value and its key
+        for (const auto& entry : edgeValues) {
+            const std::pair<int, int>& key = entry.first;
+            float value = entry.second;
+
+            if (value > maxValue) {
+                maxValue = value;
+                maxKey = key;
+            }
+        }
+
+        graphCopy.removeFriendship(maxKey.first, maxKey.second);
+    }
+
+    std::vector<std::vector<int>> components = connectedComponentsInGraph(graphCopy);
+
+
+#ifdef DEBUG
+    graphCopy.displayGraph();
+    printVectorOfVectors(components);
+#endif // DEBUG
+
+    return components;
 }
 
 void Graph::displayGraph() const {
