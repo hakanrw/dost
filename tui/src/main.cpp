@@ -19,7 +19,7 @@ void suggestFriendsInterface() {
     int id;
     std::cin >> id;
 
-    Person* person = graph.getPerson(id);
+    const Person* person = graph.getPerson(id);
 
     if (person == nullptr) {
         std::cerr << "Person with ID " << id << " not found" << std::endl;
@@ -28,10 +28,19 @@ void suggestFriendsInterface() {
 
     std::cout << "For person:\n" << *person << "\n\nWe suggest:" << std::endl;
 
-    std::vector<Person*> suggestedPeople = graph.suggestFriends(id, mode);
+    const std::vector<Person*> suggestedPeople = graph.suggestFriends(id, mode);
 
-    for (std::vector<Person*>::iterator it = suggestedPeople.begin(); it != suggestedPeople.end(); ++it) {
-        std::cout << (**it).getId() << ": " << **it << std::endl;
+    for (const Person* person : suggestedPeople) {
+        std::cout << person->getId() << ": " << *person << std::endl;
+    }
+}
+
+void clusteringCoefficient() {
+    for (const std::pair<int, Person>& pair : graph.getGraph()) {
+        const Person& person = pair.second;
+
+        std::cout << "Clustering coefficient for " << person.getSimpleString() 
+            << ": " << graph.clusteringCoefficient(person.getId()) << std::endl;
     }
 }
 
@@ -51,6 +60,8 @@ int main() {
 
         if (option == 1) graph.displayGraph();
         else if (option == 2) suggestFriendsInterface();
+        else if (option == 3) graph.degreeCentrality();
+        else if (option == 4) clusteringCoefficient();
         else if (option == 6) break;
         else std::cout << "Operation not supported." << std::endl;
 

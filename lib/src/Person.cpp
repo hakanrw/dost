@@ -56,6 +56,12 @@ std::vector<int> Person::getFriends() const {
 
 // END Setters and Getters
 
+std::string Person::getSimpleString() const {
+    std::string str = "Person (id=" + std::to_string(id) + ", name=" + name + ")";
+    return str;
+}
+
+
 std::ostream& operator<<(std::ostream& os, const Person& person) {
     os << "Person (id=" << person.id << ", name=" << person.name << ", age=" << person.age
         << ", gender=" << person.gender << ", occupation=" << person.occupation 

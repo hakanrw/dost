@@ -21,8 +21,9 @@ class Graph {
         int getSize() const;
 
         void displayGraph() const;
+        float degreeCentralityOfPerson(int id) const;
         void degreeCentrality() const;
-        int clusteringCoefficient() const;
+        float clusteringCoefficient(int id) const;
         int girvanNewman(int iterations) const;
         double edgeWeight(const Graph &graph, int u, int v) const;
 

@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <cmath>
 #include <sstream>
+#include <set>
 
 Graph::Graph() : graph() {}
 
@@ -28,6 +29,46 @@ Person* Graph::getPerson(int id) const {
 void Graph::removeFriendship(int id1, int id2) {
     getPerson(id1)->removeFriend(id2);
     getPerson(id2)->removeFriend(id1);
+}
+
+float Graph::degreeCentralityOfPerson(int id) const {
+    return getPerson(id)->getFriends().size() / (float) (graph.size() - 1);
+}
+
+void Graph::degreeCentrality() const {
+    for (std::vector<std::pair<int, Person>>::const_iterator it = graph.begin(); it != graph.end(); ++it) {
+        const Person& person = it->second; 
+        
+        std::cout << "Degree centrality for " << person.getSimpleString() << ": " 
+            << degreeCentralityOfPerson(person.getId()) << std::endl;
+    }
+}
+
+float Graph::clusteringCoefficient(int id) const {
+    const Person* person = getPerson(id);
+    const std::vector<int> friends = person->getFriends();
+
+    if (friends.size() < 2) {
+        return 0.0f; // Not enough friends to form any triangles
+    }
+
+    std::set<std::pair<int, int>> pairSet;
+
+    for (size_t i = 0; i < friends.size(); i++) {
+        int friendId = friends[i];
+        const Person* currentFriend = getPerson(friendId);
+        const std::vector<int> friendFriends = currentFriend->getFriends();
+
+        for (int friendFriendId : friendFriends) {
+            if (std::find(friends.begin(), friends.end(), friendFriendId) != friends.end()) {
+                pairSet.insert({std::min(friendId, friendFriendId), std::max(friendId, friendFriendId)});
+            }
+        }
+    }
+
+    int Kv = friends.size();
+    int Nv = pairSet.size();
+    return (2 * Nv) / (float) (Kv * (Kv - 1));
 }
 
 void Graph::displayGraph() const {
@@ -67,7 +108,7 @@ std::vector<Person*> Graph::suggestFriends(int person_id, int mode) const {
 
 std::vector<Person*> Graph::suggestFriendsByCommonFriends(const Person* person) const {
     std::vector<Person*> suggestedPeople;
-    std::vector<int> friends = person->getFriends();
+    const std::vector<int> friends = person->getFriends();
 
     for (std::vector<std::pair<int, Person>>::const_iterator it = graph.begin(); it != graph.end(); ++it) {
         std::vector<int> theirFriends = it->second.getFriends();
@@ -82,7 +123,7 @@ std::vector<Person*> Graph::suggestFriendsByCommonFriends(const Person* person) 
 
 std::vector<Person*> Graph::suggestFriendsByOccupation(const Person* person) const {
     std::vector<Person*> suggestedPeople;
-    std::vector<int> friends = person->getFriends();
+    const std::vector<int> friends = person->getFriends();
 
     std::vector<std::string> occupationWords;
 

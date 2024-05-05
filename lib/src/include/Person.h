@@ -26,6 +26,7 @@ class Person {
         std::vector<int> getFriends() const;
         void removeFriend(int id);
 
+        std::string getSimpleString() const;
         friend std::ostream& operator<<(std::ostream& os, const Person& person); // print
 
     private:
