@@ -10,7 +10,7 @@
 #include <map>
 #include <limits>
 
-// #define DEBUG 
+#define DEBUG 
 
 Graph::Graph() : graph() {}
 
@@ -233,7 +233,7 @@ std::vector<std::vector<int>> Graph::girvanNewman(int iteration) const {
 
         for (size_t x = 0; x < graph.size(); x++) {
             for (size_t y = x + 1; y < graph.size(); y++) {
-                edgeValues[{x, y}] = graphCopy.edgeBetweenness(x + 1, y + 1);
+                edgeValues[{x + 1, y + 1}] = graphCopy.edgeBetweenness(x + 1, y + 1);
             }
         }
 

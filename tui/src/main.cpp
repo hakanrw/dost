@@ -48,7 +48,7 @@ int main() {
 	graph = readData("social_network.csv");
 
     // std::cout << graph.edgeBetweenness(14, 15) << std::endl;
-    graph.girvanNewman(4);
+    // graph.girvanNewman(4);
 
     while (true) {
         std::cout << "1. Display the social network" << std::endl;
@@ -65,6 +65,7 @@ int main() {
         else if (option == 2) suggestFriendsInterface();
         else if (option == 3) graph.degreeCentrality();
         else if (option == 4) clusteringCoefficient();
+        else if (option == 5) graph.girvanNewman(4);
         else if (option == 6) break;
         else std::cout << "Operation not supported." << std::endl;
 

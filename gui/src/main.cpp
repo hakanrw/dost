@@ -125,6 +125,22 @@ static AdwNavigationPage* create_communities_page()
 
     GtkWidget *list = ui::create_tall_vbox();
 
+    // Communities 
+
+    std::vector<std::vector<int>> communities = graph.girvanNewman(4);
+
+    for (size_t i = 0; i < communities.size(); i++) {
+        GtkWidget *communityLabel = gtk_label_new(NULL);
+        char title[32];
+        sprintf(title, "<b>Community %d</b>", (int) (i + 1));
+        gtk_label_set_markup(GTK_LABEL(communityLabel), title);
+        gtk_box_append(GTK_BOX(list), communityLabel);
+
+        for (size_t j = 0; j < communities[i].size(); j++) {
+            gtk_box_append(GTK_BOX(list), ui::create_person_card(graph.getPerson(communities[i][j])));
+        }
+    }
+
     gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(scrolledWindow), list);
     gtk_box_append(GTK_BOX(communitiesBox), scrolledWindow);
 
