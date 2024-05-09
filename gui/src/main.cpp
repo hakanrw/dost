@@ -137,7 +137,7 @@ static AdwNavigationPage* create_communities_page()
         gtk_box_append(GTK_BOX(list), communityLabel);
 
         for (size_t j = 0; j < communities[i].size(); j++) {
-            gtk_box_append(GTK_BOX(list), ui::create_person_card(graph.getPerson(communities[i][j])));
+            gtk_box_append(GTK_BOX(list), ui::create_person_card_small(graph.getPerson(communities[i][j])));
         }
     }
 
