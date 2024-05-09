@@ -154,6 +154,33 @@ GtkWidget* ui::create_suggestions_list_box() {
     return listBox;
 }
 
+
+GtkWidget* ui::create_properties_list_box(const Person* person) {
+    GtkWidget *listBox = gtk_list_box_new();
+    gtk_widget_add_css_class(listBox, "boxed-list");
+    gtk_list_box_set_selection_mode(GTK_LIST_BOX(listBox), GTK_SELECTION_NONE);
+
+    GtkWidget *dcRow = adw_action_row_new();
+    adw_preferences_row_set_title(ADW_PREFERENCES_ROW(dcRow), "Degree Centrality");
+    adw_action_row_set_subtitle(ADW_ACTION_ROW(dcRow), std::to_string(graph.degreeCentralityOfPerson(person->getId())).c_str());
+    // adw_action_row_add_suffix(ADW_ACTION_ROW(dcRow), gtk_image_new_from_icon_name("go-next-symbolic"));
+    gtk_widget_add_css_class(dcRow, "property");
+    gtk_list_box_row_set_activatable(GTK_LIST_BOX_ROW(dcRow), false);
+
+    gtk_list_box_append(GTK_LIST_BOX(listBox), dcRow);
+
+    GtkWidget *ccRow = adw_action_row_new();
+    adw_preferences_row_set_title(ADW_PREFERENCES_ROW(ccRow), "Clustering Coefficient");
+    adw_action_row_set_subtitle(ADW_ACTION_ROW(ccRow), std::to_string(graph.clusteringCoefficient(person->getId())).c_str());
+    // adw_action_row_add_suffix(ADW_ACTION_ROW(suggestionRow1), gtk_image_new_from_icon_name("go-next-symbolic"));
+    gtk_widget_add_css_class(ccRow, "property");
+    gtk_list_box_row_set_activatable(GTK_LIST_BOX_ROW(ccRow), false);
+
+    gtk_list_box_append(GTK_LIST_BOX(listBox), ccRow);
+
+    return listBox;
+}
+
 void ui::add_header_bar(GtkWidget *box) {
     GtkWidget *headerBar = adw_header_bar_new();
     gtk_box_append(GTK_BOX(box), headerBar);

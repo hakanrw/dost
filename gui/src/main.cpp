@@ -76,6 +76,8 @@ static AdwNavigationPage* create_person_detail_page(const Person* person)
 
     gtk_box_append(GTK_BOX(list), ui::create_person_card(person));
 
+    // Friends
+
     GtkWidget *label = gtk_label_new(NULL);
     gtk_label_set_markup(GTK_LABEL(label), "<b>Friends</b>");
     gtk_box_append(GTK_BOX(list), label);
@@ -86,6 +88,8 @@ static AdwNavigationPage* create_person_detail_page(const Person* person)
         gtk_box_append(GTK_BOX(list), ui::create_person_card_small(graph.getPerson(*it)));
     }
 
+    // Suggestions
+
     GtkWidget *suggestionsLabel = gtk_label_new(NULL);
     gtk_label_set_markup(GTK_LABEL(suggestionsLabel), "<b>Suggestions</b>");
     gtk_box_append(GTK_BOX(list), suggestionsLabel);
@@ -95,6 +99,15 @@ static AdwNavigationPage* create_person_detail_page(const Person* person)
 
     gtk_box_append(GTK_BOX(list), listBox);
 
+    // Properties
+
+    GtkWidget *propertiesLabel = gtk_label_new(NULL);
+    gtk_label_set_markup(GTK_LABEL(propertiesLabel), "<b>Properties</b>");
+    gtk_box_append(GTK_BOX(list), propertiesLabel);
+
+    GtkWidget *propertiesBox = ui::create_properties_list_box(person);
+    gtk_box_append(GTK_BOX(list), propertiesBox);
+
     gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(scrolledWindow), list);
     gtk_box_append(GTK_BOX(detailBox), scrolledWindow);
 
@@ -102,9 +115,31 @@ static AdwNavigationPage* create_person_detail_page(const Person* person)
     return detailPage;
 }
 
+static AdwNavigationPage* create_communities_page() 
+{
+    GtkWidget *communitiesBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    ui::add_header_bar(communitiesBox);
+
+    GtkWidget *scrolledWindow = gtk_scrolled_window_new();
+    gtk_widget_set_vexpand(scrolledWindow, true);
+
+    GtkWidget *list = ui::create_tall_vbox();
+
+    gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(scrolledWindow), list);
+    gtk_box_append(GTK_BOX(communitiesBox), scrolledWindow);
+
+    AdwNavigationPage *communitiesPage = adw_navigation_page_new(communitiesBox, "Communities");
+    return communitiesPage;
+}
+
 static void row_clicked(GtkButton* button __attribute__((unused)), gpointer id) 
 {
     adw_navigation_view_push(ADW_NAVIGATION_VIEW(navigationView), create_person_detail_page(graph.getPerson(GPOINTER_TO_INT(id))));
+}
+
+static void detect_clicked(GtkButton* button __attribute__((unused))) 
+{
+    adw_navigation_view_push(ADW_NAVIGATION_VIEW(navigationView), create_communities_page());
 }
 
 static void add_list(GtkWidget *box) 
@@ -113,6 +148,23 @@ static void add_list(GtkWidget *box)
     gtk_widget_set_vexpand(scrolledWindow, true);
 
     GtkWidget *list = ui::create_tall_vbox();
+
+    // Detect Communities
+
+    GtkWidget *listBox = gtk_list_box_new();
+    gtk_widget_add_css_class(listBox, "boxed-list");
+    gtk_list_box_set_selection_mode(GTK_LIST_BOX(listBox), GTK_SELECTION_NONE);
+
+    GtkWidget *detectRow = adw_action_row_new();
+    adw_preferences_row_set_title(ADW_PREFERENCES_ROW(detectRow), "Detect Communities");
+    adw_action_row_add_suffix(ADW_ACTION_ROW(detectRow), gtk_image_new_from_icon_name("go-next-symbolic"));
+    gtk_list_box_row_set_activatable(GTK_LIST_BOX_ROW(detectRow), true);
+    g_signal_connect(detectRow, "activated", G_CALLBACK(detect_clicked), NULL);
+
+    gtk_list_box_append(GTK_LIST_BOX(listBox), detectRow);
+    gtk_box_append(GTK_BOX(list), listBox);
+
+    // People
     
     std::vector<std::pair<int, Person>> _graph = graph.getGraph();
     

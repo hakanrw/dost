@@ -10,7 +10,7 @@
 #include <map>
 #include <limits>
 
-#define DEBUG 
+// #define DEBUG 
 
 Graph::Graph() : graph() {}
 
@@ -153,6 +153,9 @@ float Graph::edgeBetweenness(int a, int b) const {
     int pathsPassEdge = 0;
     int totalPaths = 0;
 
+    std::vector<int> neighbors = getPerson(a)->getFriends();
+    if (std::find(neighbors.begin(), neighbors.end(), b) == neighbors.end()) return 0.0f;
+
     for (size_t i = 0; i < graph.size(); i++) {
         for (size_t j = i + 1; j < graph.size(); j++) {
             std::vector<std::vector<int>> paths = bfs(graph[i].first, graph[j].first);
@@ -230,7 +233,7 @@ std::vector<std::vector<int>> Graph::girvanNewman(int iteration) const {
 
         for (size_t x = 0; x < graph.size(); x++) {
             for (size_t y = x + 1; y < graph.size(); y++) {
-                edgeValues[{x, y}] = graphCopy.edgeBetweenness(x, y);
+                edgeValues[{x, y}] = graphCopy.edgeBetweenness(x + 1, y + 1);
             }
         }
 

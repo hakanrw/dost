@@ -47,7 +47,7 @@ void clusteringCoefficient() {
 int main() {
 	graph = readData("social_network.csv");
 
-    std::cout << graph.edgeBetweenness(14, 15) << std::endl;
+    // std::cout << graph.edgeBetweenness(14, 15) << std::endl;
     graph.girvanNewman(4);
 
     while (true) {
