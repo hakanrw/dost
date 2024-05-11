@@ -22,19 +22,19 @@ The project requires the following components to be installed
   - GTK4
   - libadwaita
 
-### Fedora, CentOS, RHEL
+### Fedora >=39, RHEL >=9, CentOS Stream
 ```
 # dnf install gcc make cmake gtk4-devel libadwaita-devel 
 ```
 
-### Ubuntu, Debian, Mint
+### Ubuntu >=23.10, Debian Unstable
 ```
-# apt install gcc make cmake libgtk4-dev libadwaita-1.0
+# apt install gcc make cmake libgtk-4-dev libadwaita-1-dev
 ```
 
-### Arch, Manjaro
+### Arch Linux, Manjaro
 ```
-# pacman -S gcc make cmake gtk4 libadwaita
+# pacman -Syu gcc make cmake gtk4 libadwaita
 ```
 
 ### macOS with Brew

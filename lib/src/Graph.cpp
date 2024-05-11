@@ -150,15 +150,21 @@ void printVectorOfVectors(const std::vector<std::vector<T>> &vec) {
 }
 
 float Graph::edgeBetweenness(int a, int b) const {
+    return edgeWeight(*this, a, b);
+}
+
+float Graph::edgeWeight(const Graph& graph, int u, int v) {
     int pathsPassEdge = 0;
     int totalPaths = 0;
 
-    std::vector<int> neighbors = getPerson(a)->getFriends();
-    if (std::find(neighbors.begin(), neighbors.end(), b) == neighbors.end()) return 0.0f;
+    std::vector<int> neighbors = graph.getPerson(u)->getFriends();
+    if (std::find(neighbors.begin(), neighbors.end(), v) == neighbors.end()) return 0.0f;
 
-    for (size_t i = 0; i < graph.size(); i++) {
-        for (size_t j = i + 1; j < graph.size(); j++) {
-            std::vector<std::vector<int>> paths = bfs(graph[i].first, graph[j].first);
+    std::vector<std::pair<int, Person>> gg = graph.getGraph();
+
+    for (size_t i = 0; i < gg.size(); i++) {
+        for (size_t j = i + 1; j < gg.size(); j++) {
+            std::vector<std::vector<int>> paths = graph.bfs(gg[i].first, gg[j].first);
             totalPaths += paths.size();
 
             // std::cout << "-------------------" << std::endl;
@@ -166,8 +172,8 @@ float Graph::edgeBetweenness(int a, int b) const {
 
             for (size_t z = 0; z < paths.size(); z++) {
                 const std::vector<int> path = paths[z]; 
-                auto aLocation = find(path.begin(), path.end(), a);
-                auto bLocation = find(path.begin(), path.end(), b);
+                auto aLocation = find(path.begin(), path.end(), u);
+                auto bLocation = find(path.begin(), path.end(), v);
 
                 if (aLocation == path.end() || bLocation == path.end()) continue;
 
@@ -182,11 +188,6 @@ float Graph::edgeBetweenness(int a, int b) const {
     if (totalPaths == 0) return 0.0f;
 
     return pathsPassEdge /* / (float) totalPaths */;
-}
-
-// i am not sure what the teacher wanted by edgeWeight
-float Graph::edgeWeight(const Graph& graph, int u, int v) const {
-    return graph.edgeBetweenness(u, v);
 }
 
 static void dfs(const Graph& graph, int node, std::set<int>& visited, std::vector<int>& component) {
@@ -233,7 +234,7 @@ std::vector<std::vector<int>> Graph::girvanNewman(int iteration) const {
 
         for (size_t x = 0; x < graph.size(); x++) {
             for (size_t y = x + 1; y < graph.size(); y++) {
-                edgeValues[{x + 1, y + 1}] = graphCopy.edgeBetweenness(x + 1, y + 1);
+                edgeValues[{x + 1, y + 1}] = edgeWeight(graphCopy, x + 1, y + 1);
             }
         }
 

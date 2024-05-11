@@ -44,6 +44,19 @@ void clusteringCoefficient() {
     }
 }
 
+void detectCommunities() {
+    std::vector<std::vector<int>> communities = graph.girvanNewman(4);
+
+    for (size_t i = 0; i < communities.size(); i++) {
+        std::cout << std::endl;
+        std::cout << "Community " << i + 1 << std::endl;
+        
+        for (size_t j = 0; j < communities[i].size(); j++) {
+            std::cout << *graph.getPerson(communities[i][j]) << std::endl;
+        }
+    }
+}
+
 int main() {
 	graph = readData("social_network.csv");
 
@@ -65,7 +78,7 @@ int main() {
         else if (option == 2) suggestFriendsInterface();
         else if (option == 3) graph.degreeCentrality();
         else if (option == 4) clusteringCoefficient();
-        else if (option == 5) graph.girvanNewman(4);
+        else if (option == 5) detectCommunities();
         else if (option == 6) break;
         else std::cout << "Operation not supported." << std::endl;
 
