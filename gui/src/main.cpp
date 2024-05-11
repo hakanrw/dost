@@ -11,6 +11,13 @@
 Graph graph;
 GtkWidget *navigationView;
 
+static AdwNavigationPage* create_person_detail_page(const Person* person);
+
+static void row_clicked(GtkButton* button __attribute__((unused)), gpointer id) 
+{
+    adw_navigation_view_push(ADW_NAVIGATION_VIEW(navigationView), create_person_detail_page(graph.getPerson(GPOINTER_TO_INT(id))));
+}
+
 static AdwNavigationPage* create_person_suggestion_page(const Person* person, int suggestion_mode) 
 {
     GtkWidget *detailBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
@@ -38,7 +45,9 @@ static AdwNavigationPage* create_person_suggestion_page(const Person* person, in
     std::vector<Person*> suggestions = graph.suggestFriends(person->getId(), suggestion_mode);
 
     for (std::vector<Person*>::const_iterator it = suggestions.begin(); it != suggestions.end(); ++it) {
-        gtk_box_append(GTK_BOX(list), ui::create_person_card_small(*it));
+        GtkWidget* row = ui::create_person_card_small(*it);
+        gtk_box_append(GTK_BOX(list), row);
+        g_signal_connect(row, "clicked", G_CALLBACK(row_clicked), GINT_TO_POINTER((*it)->getId()));
     }
 
     gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(scrolledWindow), list);
@@ -85,7 +94,9 @@ static AdwNavigationPage* create_person_detail_page(const Person* person)
     std::vector<int> friends = person->getFriends();
 
     for (std::vector<int>::const_iterator it = friends.begin(); it != friends.end(); ++it) {
-        gtk_box_append(GTK_BOX(list), ui::create_person_card_small(graph.getPerson(*it)));
+        GtkWidget* row = ui::create_person_card_small(graph.getPerson(*it));
+        gtk_box_append(GTK_BOX(list), row);
+        g_signal_connect(row, "clicked", G_CALLBACK(row_clicked), GINT_TO_POINTER(*it));
     }
 
     // Suggestions
@@ -137,7 +148,9 @@ static AdwNavigationPage* create_communities_page()
         gtk_box_append(GTK_BOX(list), communityLabel);
 
         for (size_t j = 0; j < communities[i].size(); j++) {
-            gtk_box_append(GTK_BOX(list), ui::create_person_card_small(graph.getPerson(communities[i][j])));
+            GtkWidget* row = ui::create_person_card_small(graph.getPerson(communities[i][j]));
+            gtk_box_append(GTK_BOX(list), row);
+            g_signal_connect(row, "clicked", G_CALLBACK(row_clicked), GINT_TO_POINTER(communities[i][j]));
         }
     }
 
@@ -146,11 +159,6 @@ static AdwNavigationPage* create_communities_page()
 
     AdwNavigationPage *communitiesPage = adw_navigation_page_new(communitiesBox, "Communities");
     return communitiesPage;
-}
-
-static void row_clicked(GtkButton* button __attribute__((unused)), gpointer id) 
-{
-    adw_navigation_view_push(ADW_NAVIGATION_VIEW(navigationView), create_person_detail_page(graph.getPerson(GPOINTER_TO_INT(id))));
 }
 
 static void detect_clicked(GtkButton* button __attribute__((unused))) 
