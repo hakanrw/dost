@@ -7,6 +7,4 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 
 add_subdirectory(lib)
 add_subdirectory(tui)
-IF (UNIX)
 add_subdirectory(gui)
-ENDIF()
