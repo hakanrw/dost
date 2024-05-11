@@ -48,7 +48,7 @@ Install the remaining components
 ```
 
 ### Windows
-  - Install MSYS2: https://github.com/msys2/msys2-installer/releases/download/2024-05-07/msys2-x86_64-20240507.exe
+  - Install [MSYS2](https://github.com/msys2/msys2-installer/releases/download/2024-05-07/msys2-x86_64-20240507.exe)
   - On MSYS2 MINGW64 shell run the following command:
 ```
 pacman -Syu mingw-w64-x86_64-gcc mingw-w64-x86_64-make mingw-w64-x86_64-cmake mingw-w64-x86_64-gtk4 mingw-w64-x86_64-libadwaita
