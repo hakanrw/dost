@@ -1,5 +1,5 @@
 # Dost
-Social platforming project written with C++
+Social platforming project written with C++ and GTK4.
 
 
 ## Author
@@ -29,7 +29,7 @@ The project requires the following components to be installed
 
 ### Ubuntu, Debian, Mint
 ```
-# apt install gcc make cmake gtk4-dev libadwaita-dev 
+# apt install gcc make cmake libgtk4-dev libadwaita-1.0
 ```
 
 ### Arch, Manjaro
@@ -48,13 +48,15 @@ Install the remaining components
 ```
 
 ### Windows
-  - Install and add MinGW-w64 to PATH `https://github.com/niXman/mingw-builds-binaries/releases`
+  - Install Visual Studio 2022 and Visual C++ build tools
   - Install CMake `https://cmake.org/download/`
 
 Building the `gui` project is not possible on Windows, although you can still build and run `tui`.
 
 
 ## Building Steps
+Open a terminal window at the root folder of the project.
+
 For building all subprojects, do either
   - `./build.sh` (UNIX) or `build.bat` (NT)
 
