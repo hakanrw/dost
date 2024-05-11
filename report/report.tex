@@ -1,4 +1,4 @@
-\documentclass[twocolumn]{article}
+\documentclass[11pt, twocolumn]{article}
 
 % Packages
 \usepackage{graphicx}
@@ -30,42 +30,66 @@
 
 % Introduction
 \section{Introduction}
-This document serves as a comprehensive report of the Social Platforming App project. The project is a social networking platform written in C++ using the GTK4 and Adwaita frameworks. It is designed to provide users with a modern, user-friendly interface for connecting and interacting with others.
+Dost is a social network analysis app built with C++ and GTK4. It consists of a graphical and terminal user interface.
+The project aims to show relations, suggest new friends, and detect communities among people.
 
 % Project Description
 \section{Methodology}
-The Social Platforming App project aims to create an interactive and intuitive platform for social networking. The app's main features include:
-\begin{itemize}
-    \item User authentication and account management.
-    \item User profiles with customizable information.
-    \item Social feed displaying posts from friends and followed accounts.
-    \item Messaging functionality for direct communication between users.
-    \item Search and discover features for finding new connections.
-    \item Notifications and alerts for user interactions.
-    \item Privacy and security settings for user data protection.
-\end{itemize}
+The project consists of three subprojects \texttt{lib}, \texttt{tui}, and \texttt{gui}. This modular approach
+makes it easier to share components between graphical and terminal interfaces, and reduces development time. 
+
+The \texttt{lib} subproject is a static library which implements Graph and Person structures, including their methods. 
+Detecting communities is made possible with the Girvan Newman algorithm, which itself depends on edge betweenness, BFS, 
+and DFS algorithms.
+
+The \texttt{tui} subproject provides a simple terminal user interface for the user.
+
+The \texttt{gui} subproject provides a graphical user interface for the user. This
+is a much better alternative than the terminal interface, and offers an easier and tidier user experience.
+
+Compilation of this project is made with the CMake build tool. CMake was selected for cross platform compatibility, 
+advanced configuration, and automation. It is a popular choice among many other C/C++ projects and it is a familiar tool 
+for many developers.
+
+I had not created a CMake project that consisted of multiple subprojects before. I was also relatively new to GTK, 
+but this project made me a lot more confident and experienced on these technologies. 
+
 
 % Technologies Used
 \section{Implementation}
-The project is built using the following technologies:
-\begin{itemize}
-    \item **C++:** The main programming language used for the project.
-    \item **GTK4:** The graphical user interface toolkit used for building the app's front-end.
-    \item **Adwaita:** The design system used to create a modern, consistent UI for the app.
-\end{itemize}
+The development first began with \texttt{lib} and \texttt{tui} subprojects in parallel. Implementing friend suggestion,
+graph display, degree centrality and clustering coefficient was relatively easy. Girvan Newman algorithm, on the other hand,
+required detailed research and some trial and error until it got working.
+
+CMake build process made this parallel development easy and painless. The modular approach ensured there was clear separation 
+between library and UI logic. 
+
+After finishing the library and terminal interface, I began working on the graphical user interface. I selected GTK4 and libadwaita
+for a modern look. It is not the easiest UI toolkit to work with, and requires some expertise in C and build tools. However, cross
+platform compatibility and user friendly UI widgets outweighed its difficulty for me as a developer.
 
 % Results
 \section{Results}
-\begin{tabular}{cc}
-    \includegraphics[width=.225\textwidth]{gui0} &
-    \includegraphics[width=.225\textwidth]{gui1}
-     \\
-     \includegraphics[width=.225\textwidth]{gui2} &
-     \includegraphics[width=.225\textwidth]{tui}
-\end{tabular}
-  
+The Girvan Newman algorithm detected five different communities, which makes sense after analyzing the graph data. Friend suggestion,
+degree centrality and clustering coefficient algorithms worked like I expected. The graphical user interface ran without issues.
+
+Thanks to the cross platform nature of the project, It has been deployed to and tested on four different operating systems, 
+namely \textit{Arch Linux}, \textit{Fedora 40}, \textit{Ubuntu 23.10}, and \textit{Windows 11}. All builds ran smoothly.
+
+
 % Conclusion
 \section{Conclusion}
-Describe the challenges you faced during the development of the project and how you addressed them.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+
+\newpage
+
+\begin{tabular}{cc}
+    \includegraphics[width=.45\textwidth]{gui00} &
+    \includegraphics[width=.45\textwidth]{gui1}
+     \\
+     \includegraphics[width=.45\textwidth]{gui2} &
+     \includegraphics[width=.45\textwidth]{tui}
+\end{tabular}
+
 
 \end{document}
