@@ -1,5 +1,4 @@
 #include "utils.h"
-
 std::vector<std::string> split(const std::string &s, char delimiter)
 {
     std::vector<std::string> tokens;
@@ -38,7 +37,7 @@ std::vector<std::string> parseCsvLine(const std::string &line)
 
     while (lineStream)
     {
-        char ch = lineStream.get();
+        signed char ch = lineStream.get();
 
         if (ch == '"')
         {
@@ -50,7 +49,7 @@ std::vector<std::string> parseCsvLine(const std::string &line)
             currentCell.str("");
             currentCell.clear();
         }
-        else if (ch == std::char_traits<char>::eof())
+        else if (ch == -1)
         {
             result.push_back(currentCell.str());
             break;
